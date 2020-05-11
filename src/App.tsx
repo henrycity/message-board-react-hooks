@@ -1,21 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { css, jsx } from '@emotion/core';
+
 import './App.css';
 
-function App() {
+import { ConversationBody } from './ConversationBody';
+import { ConversationList } from './ConversationList';
+import { Conversations } from './types';
+
+const App = () => {
+  const [selectedConversationId, setSelectedConversationId] = useState('');
+  const [conversations, setConversations] = useState<Conversations>({});
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const getConversation = async () => {
+      const { data } = await axios.get(
+        `https://ui-developer-backend.herokuapp.com/api/conversations/${selectedConversationId}/messages`,
+      );
+      const updatedConversations = {
+        ...conversations,
+        [selectedConversationId]: data,
+      };
+      setConversations(updatedConversations);
+    };
+
+    const getUsers = async () => {
+      const { data } = await axios.get(`https://ui-developer-backend.herokuapp.com/api/users`);
+      setUsers(data);
+    };
+
+    getUsers();
+    if (!conversations[selectedConversationId]) {
+      getConversation();
+    }
+  }, [selectedConversationId]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
+    <div
+      className="App"
+      css={css`
+        background-color: green;
+      `}
+    >
+      <ConversationList setSelectedConversationId={setSelectedConversationId} />
+      <ConversationBody conversation={conversations[selectedConversationId]} users={users} />
     </div>
   );
-}
+};
 
 export default App;
