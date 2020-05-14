@@ -1,27 +1,63 @@
 import React from 'react';
-import { Conversation } from './types';
+import { css } from '@emotion/core';
 
 interface ConversationItemProps {
-  conversation: Conversation;
-  onClickConversation: (id: string) => void;
+  username: string;
+  avatarUrl: string;
+  handleClick?: () => void;
+  subtext: string;
+  isSelected?: boolean;
 }
 
 export const ConversationItem: React.FunctionComponent<ConversationItemProps> = ({
-  conversation,
-  onClickConversation,
+  avatarUrl,
+  username,
+  handleClick,
+  subtext,
+  isSelected,
 }) => {
-  const handleClick = () => {
-    onClickConversation(conversation.id);
-  };
-
+  console.log('isSelected', isSelected);
   return (
-    <div onClick={handleClick}>
-      <div>{conversation.username}</div>
-      <img alt="Avatar" src={conversation.userAvatarUrL} />
+    <div
+      css={css`
+        display: flex;
+        height: 60px;
+        align-items: center;
+        background-color: ${isSelected ? 'darkgrey' : undefined};
+        padding-left: 10px;
+      `}
+      onClick={handleClick ?? undefined}
+    >
       <div>
-        {conversation.unread_message_count
-          ? `Has unread messages (${conversation.unread_message_count})`
-          : 'All caught up'}
+        <img
+          css={css`
+            border-radius: 50%;
+            width: 40px;
+          `}
+          alt="Avatar"
+          src={avatarUrl}
+        />
+      </div>
+      <div
+        css={css`
+          margin-left: 5%;
+        `}
+      >
+        <div
+          css={css`
+            text-align: left;
+          `}
+        >
+          {username}
+        </div>
+        <div
+          css={css`
+            color: gray;
+            text-align: left;
+          `}
+        >
+          {subtext}
+        </div>
       </div>
     </div>
   );

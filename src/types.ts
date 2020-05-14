@@ -15,8 +15,15 @@ export interface Conversation {
 export interface Message {
   id: string;
   body: string;
-  from_user_id: string;
+  time: string;
+  user: User;
+}
+
+export interface MessageResponse {
+  id: string;
+  body: string;
   created_at: string;
+  from_user_id: string;
 }
 
 export interface User {

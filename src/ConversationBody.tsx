@@ -1,6 +1,8 @@
 import React from 'react';
+import { css } from '@emotion/core';
 
 import { Message, User } from './types';
+import { MessageItem } from './MessageItem';
 
 interface ConversationProps {
   conversation: Message[];
@@ -9,13 +11,17 @@ interface ConversationProps {
 
 export const ConversationBody: React.FunctionComponent<ConversationProps> = ({ conversation = [], users }) => {
   return (
-    <>
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        flex-basis: 300px;
+        margin-left: 1%;
+      `}
+    >
       {conversation.map((message) => (
-        <div key={message.id}>
-          <div>{message.body}</div>
-          <div>{users.find((user) => user.id === message.from_user_id)?.username}</div>
-        </div>
+        <MessageItem key={message.id} message={message} />
       ))}
-    </>
+    </div>
   );
 };

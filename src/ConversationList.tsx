@@ -1,15 +1,20 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState, Dispatch, SetStateAction } from 'react';
+import { css } from '@emotion/core';
 
 import { ConversationResponse, Conversation } from './types';
-import { ConversationItem } from './ConversationItem';
+import { ConversationListItem } from './ConversationListItem';
 
 interface ConversationListProps {
+  selectedConversationId: string;
   setSelectedConversationId: Dispatch<SetStateAction<string>>;
 }
 
-export const ConversationList: React.FunctionComponent<ConversationListProps> = ({ setSelectedConversationId }) => {
-  const [conversations, setConversations] = useState([]);
+export const ConversationList: React.FunctionComponent<ConversationListProps> = ({
+  selectedConversationId,
+  setSelectedConversationId,
+}) => {
+  const [conversations, setConversations] = useState<Conversation[]>([]);
 
   useEffect(() => {
     const getConversationList = async () => {
@@ -41,9 +46,20 @@ export const ConversationList: React.FunctionComponent<ConversationListProps> = 
   };
 
   return (
-    <div>
-      {conversations.map((conversation: Conversation) => (
-        <ConversationItem key={conversation.id} conversation={conversation} onClickConversation={onClickConversation} />
+    <div
+      css={css`
+        flex-basis: 20%;
+        height: 100vh;
+        background-color: lightgrey;
+      `}
+    >
+      {conversations.map((conversation) => (
+        <ConversationListItem
+          key={conversation.id}
+          conversation={conversation}
+          onClickConversation={onClickConversation}
+          isSelected={selectedConversationId === conversation.id}
+        />
       ))}
     </div>
   );
